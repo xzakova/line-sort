@@ -10,34 +10,83 @@
 
 TEST_CASE("Options")
 {
-
-	SECTION("no options")
+	SECTION("cin")
 	{
-		char * argv[] = { "line-sort" };
-		REQUIRE(options::parse(1, argv) == std::make_tuple(Order::ascending, Filter::all, Case::sensitive, (char *) nullptr));
+		SECTION("no options")
+		{
+			char * argv[] = { "line-sort" };
+			REQUIRE(options::parse(_countof(argv), argv) == std::make_tuple(Order::ascending, Filter::all, Case::sensitive, (char *) nullptr));
+		}
+
+		SECTION("reversed")
+		{
+			char * argv[] = { "line-sort" , "-r" };
+			REQUIRE(options::parse(_countof(argv), argv) == std::make_tuple(Order::descending, Filter::all, Case::sensitive, (char *) nullptr));
+		}
+
+		SECTION("unique")
+		{
+			char * argv[] = { "line-sort" , "-u" };
+			REQUIRE(options::parse(_countof(argv), argv) == std::make_tuple(Order::ascending, Filter::unique, Case::sensitive, (char *) nullptr));
+		}
+
+		SECTION("ignore case")
+		{
+			char * argv[] = { "line-sort", "-i" };
+			REQUIRE(options::parse(_countof(argv), argv) == std::make_tuple(Order::ascending, Filter::all, Case::ignore, (char *) nullptr));
+		}
+
+		SECTION("multiple")
+		{
+		}
+
+		
+
 	}
 
-	SECTION("reversed")
+
+
+	SECTION("file")
 	{
-		char * argv[] = { "line-sort" };
-		REQUIRE(options::parse(1, argv) == std::make_tuple(Order::descending, Filter::all , Case::sensitive, (char *) nullptr));
+		SECTION("no options")
+		{
+			char * argv[] = { "line-sort" , "subor.txt" };
+			REQUIRE(options::parse(_countof(argv), argv) == std::make_tuple(Order::ascending, Filter::all, Case::sensitive, argv[1]));
+		}
+		SECTION("reversed")
+		{
+			char * argv[] = { "line-sort" , "-r" , "subor.txt" };
+			REQUIRE(options::parse(_countof(argv), argv) == std::make_tuple(Order::descending, Filter::all, Case::sensitive, argv[2]));
+		}
+		SECTION("unique")
+		{
+			char * argv[] = { "line-sort" , "-u" , "subor.txt" };
+			REQUIRE(options::parse(_countof(argv), argv) == std::make_tuple(Order::ascending, Filter::unique, Case::sensitive, argv[2]));
+		}
+
+		SECTION("ignore case")
+		{
+			char * argv[] = { "line-sort" , "-i" , "subor.txt" };
+			REQUIRE(options::parse(_countof(argv), argv) == std::make_tuple(Order::ascending, Filter::all, Case::ignore, argv[2]));
+		}
+
+		SECTION("multiple")
+		{
+		}
+
 	}
 
-	SECTION("unique")
-	{
-		char * argv[] = { "line-sort" };
-		REQUIRE(options::parse(1, argv) == std::make_tuple(Order::ascending, Filter::unique, Case::sensitive, (char *) nullptr));
-	}
+	
 
-	SECTION("ignore case")
-	{
-		char * argv[] = { "line-sort" };
-		REQUIRE(options::parse(1, argv) == std::make_tuple(Order::ascending, Filter::all, Case::ignore, (char *) nullptr));
-	}
+	
 
-	SECTION("multiple")
-	{
-	}
+
+
+
+
+
+
+
 }
 
 namespace
