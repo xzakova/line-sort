@@ -6,8 +6,11 @@
 
 #include <sstream>
 
+
+
 TEST_CASE("Options")
 {
+
 	SECTION("no options")
 	{
 		char * argv[] = { "line-sort" };
@@ -16,14 +19,20 @@ TEST_CASE("Options")
 
 	SECTION("reversed")
 	{
+		char * argv[] = { "line-sort" };
+		REQUIRE(options::parse(1, argv) == std::make_tuple(Order::descending, Filter::all , Case::sensitive, (char *) nullptr));
 	}
 
 	SECTION("unique")
 	{
+		char * argv[] = { "line-sort" };
+		REQUIRE(options::parse(1, argv) == std::make_tuple(Order::ascending, Filter::unique, Case::sensitive, (char *) nullptr));
 	}
 
 	SECTION("ignore case")
 	{
+		char * argv[] = { "line-sort" };
+		REQUIRE(options::parse(1, argv) == std::make_tuple(Order::ascending, Filter::all, Case::ignore, (char *) nullptr));
 	}
 
 	SECTION("multiple")
