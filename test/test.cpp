@@ -15,6 +15,7 @@ TEST_CASE("Options")
 		SECTION("no options")
 		{
 			char * argv[] = { "line-sort" };
+
 			REQUIRE(options::parse(_countof(argv), argv) == std::make_tuple(Order::ascending, Filter::all, Case::sensitive, (char *) nullptr));
 		}
 
@@ -38,8 +39,28 @@ TEST_CASE("Options")
 
 		SECTION("multiple")
 		{
+			char * argv[] = { "line-sort", "-r-i" };
+			REQUIRE(options::parse(_countof(argv), argv) == std::make_tuple(Order::descending, Filter::all, Case::ignore, (char *) nullptr));
+			char * argv[] = { "line-sort", "-u-i" };
+			REQUIRE(options::parse(_countof(argv), argv) == std::make_tuple(Order::ascending, Filter::unique, Case::ignore, (char *) nullptr));
+			char * argv[] = { "line-sort", "-r-u-i" };
+			REQUIRE(options::parse(_countof(argv), argv) == std::make_tuple(Order::descending, Filter::unique, Case::ignore, (char *) nullptr));
+			char * argv[] = { "line-sort", "-r-u" };
+			REQUIRE(options::parse(_countof(argv), argv) == std::make_tuple(Order::descending, Filter::unique, Case::sensitive, (char *) nullptr));
+
 		}
 
+		SECTION("bad")
+		{
+			Order o;
+			Filter f;
+			Case c;
+			char * argv[] = { "line-sort", "-r-l" };
+			REQUIRE(options::parse(_countof(argv), argv) == std::make_tuple(o,f,c, (char *) nullptr));
+			char * argv[] = { "line-sort", "-u-r-l" };
+			REQUIRE(options::parse(_countof(argv), argv) == std::make_tuple(o, f, c, (char *) nullptr));
+
+		}
 		
 
 	}
@@ -72,8 +93,29 @@ TEST_CASE("Options")
 
 		SECTION("multiple")
 		{
+			char * argv[] = { "line-sort" , "-r-u" , "subor.txt" };
+			REQUIRE(options::parse(_countof(argv), argv) == std::make_tuple(Order::descending, Filter::unique, Case::sensitive, argv[2]));
+			char * argv[] = { "line-sort" , "-r-i" , "subor.txt" };
+			REQUIRE(options::parse(_countof(argv), argv) == std::make_tuple(Order::descending, Filter::all, Case::ignore, argv[2]));
+			char * argv[] = { "line-sort" , "-i-u" , "subor.txt" };
+			REQUIRE(options::parse(_countof(argv), argv) == std::make_tuple(Order::ascending, Filter::unique, Case::ignore, argv[2]));
+			char * argv[] = { "line-sort" , "-i-u-r" , "subor.txt" };
+			REQUIRE(options::parse(_countof(argv), argv) == std::make_tuple(Order::descending, Filter::unique, Case::ignore, argv[2]));
+
 		}
 
+		SECTION("bad")
+		{
+			Order o;
+			Filter f;
+			Case c;
+			char *ch{ nullptr };
+			char * argv[] = { "line-sort", "-r-l" };
+			REQUIRE(options::parse(_countof(argv), argv) == std::make_tuple(o, f, c, ch));
+			char * argv[] = { "line-sort", "-u-r-l" };
+			REQUIRE(options::parse(_countof(argv), argv) == std::make_tuple(o, f, c, ch));
+
+		}
 	}
 
 	

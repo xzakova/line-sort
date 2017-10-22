@@ -1,4 +1,28 @@
 #include "options.h"
+#include <iostream>
+#include <vector>
+
+std::vector<std::string> rozbi_multiple(char *retazec)
+{
+	
+	char pomlcka = '-';
+	
+	std::vector<std::string> parametre;
+	std::string s = std::string(retazec);
+	size_t pozicia = 0;
+	std::string par;
+	
+
+	while ((pozicia = s.find(pomlcka)) != std::string::npos)
+	{
+		par = s.substr(1, 1);
+		parametre.push_back(par);
+		s.erase(0, pozicia + 2);
+	}
+
+	return parametre;
+}
+
 
 std::optional<std::tuple<Order, Filter, Case, char *>> options::parse(int argc, char * argv[])
 {
@@ -7,87 +31,46 @@ std::optional<std::tuple<Order, Filter, Case, char *>> options::parse(int argc, 
 	Case compare{ Case::sensitive };
 	char * input{ nullptr };
 
+	Order orderzle;
+	Filter filterzle;
+	Case comparezle;
+
 	if (argc == 1)
 		return std::make_tuple(order, filter, compare, input);
+	if (argc == 3)
+		input == argv[2];
 
-
-	// parse commandline options
-
-
-	if (argc==2)
-	{ 
-		if (argv[1] != "-r" || argv[1] != "-u" || argv[1] != "-i")
-		{
-			return{};
-		}
-		if (argv[1] == "-r")
-		{
-			order={ Order::descending };
-			filter={ Filter::all };
-			compare={ Case::sensitive };
-			input={ nullptr };
-		}
-		if (argv[1] == "-u")
-		{
-			order = { Order::ascending };
-			filter = { Filter::unique };
-			compare = { Case::sensitive };
-			input = { nullptr };
-		}
-		if (argv[1] == "-i")
-		{
-			order = { Order::ascending };
-			filter = { Filter::all };
-			compare = { Case::ignore };
-			input = { nullptr };
-		}
-		if (argv[1] != nullptr)
-		{
-			order = { Order::ascending };
-			filter = { Filter::all };
-			compare = { Case::ignore };
-			input = { argv[2] };
-		}
-		else
-		{
-			order = { Order::ascending };
-			filter = { Filter::all };
-			compare = { Case::sensitive };
-			input = { nullptr };
-		}
-	}
 	
+	int dlzka = strlen(argv[1]);
 
-	if (argc==3)
+	if (dlzka != 2 || dlzka != 4 || dlzka != 6)							//pre pripad ze robime obyc. line sort so suborom
 	{
-		if (argv[1] != "-r" || argv[1] != "-u" || argv[1] != "-i")
+		input == argv[1];
+		return std::make_tuple(order, filter, compare, input);
+
+	}
+	else
+	{
+		std::vector<std::string> viacparam;								
+		viacparam = rozbi_multiple(argv[1]);
+
+
+		for (std::string i : viacparam)
 		{
-			return{};
-		}
-		if (argv[1] == "-r")
-		{
-			order = { Order::descending };
-			filter = { Filter::all };
-			compare = { Case::sensitive };
-			input = { argv[2] };
-		}
-		if (argv[1] == "-u")
-		{
-			order = { Order::ascending };
-			filter = { Filter::unique };
-			compare = { Case::sensitive };
-			input = { argv[2] };
-		}
-		if (argv[1] == "-i")
-		{
-			order = { Order::ascending };
-			filter = { Filter::all };
-			compare = { Case::ignore };
-			input = { argv[2] };
+			if (i == "r")
+				order = { Order::descending };
+			if (i == "u")
+				filter = { Filter::unique };
+			if (i == "i")
+				compare = { Case::ignore };
+
+			else return std::make_tuple(orderzle, filterzle, comparezle, input);
 		}
 
 	}
+
 	
+
 
 	return std::make_tuple(order, filter, compare, input);
 
