@@ -1,0 +1,4 @@
+Ahoj
+Dnes je
+pekny den
+Hello world
