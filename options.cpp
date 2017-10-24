@@ -31,21 +31,18 @@ std::optional<std::tuple<Order, Filter, Case, char *>> options::parse(int argc, 
 	Case compare{ Case::sensitive };
 	char * input{ nullptr };
 
-	Order orderzle;
-	Filter filterzle;
-	Case comparezle;
 
 	if (argc == 1)
 		return std::make_tuple(order, filter, compare, input);
 	if (argc == 3)
-		input == argv[2];
+		input = argv[2];
 
 	
 	int dlzka = strlen(argv[1]);
 
 	if (dlzka != 2 || dlzka != 4 || dlzka != 6)							//pre pripad ze robime obyc. line sort so suborom
 	{
-		input == argv[1];
+		input = argv[1];
 		return std::make_tuple(order, filter, compare, input);
 
 	}
@@ -64,7 +61,8 @@ std::optional<std::tuple<Order, Filter, Case, char *>> options::parse(int argc, 
 			if (i == "i")
 				compare = { Case::ignore };
 
-			else return std::make_tuple(orderzle, filterzle, comparezle, input);
+			else return options::parse(argc, argv); //{}
+				
 		}
 
 	}
