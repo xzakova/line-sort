@@ -110,16 +110,6 @@ TEST_CASE("Options")
 		}
 	}
 
-	
-
-	
-
-
-
-
-
-
-
 
 }
 
@@ -169,22 +159,98 @@ TEST_CASE("Sorting")
 
 		REQUIRE(sort::process(Order::ascending, Filter::unique, Case::sensitive, data::empty, output) == true);
 		REQUIRE(output.str() == "");
+
+		//output.str("");
+		//REQUIRE(sort::process(Order::ascending, Filter::unique, Case::sensitive, data::one_char, output) == true);
+		//REQUIRE(output.str() == " \n");
+
+		//output.str("");
+		//REQUIRE(sort::process(Order::ascending, Filter::unique, Case::sensitive, data::one_line, output) == true);
+		//REQUIRE(output.str() == "\n");
+
+		//output.str("");
+		//REQUIRE(sort::process(Order::ascending, Filter::unique, Case::sensitive, data::numbered, output) == true);
+		//REQUIRE(output.str() == "1\n2\n3\n4\n5\n9\n");
 	}
 
 	SECTION("ascending - unique - ignore case")
 	{
+		std::ostringstream output{};
+
+		REQUIRE(sort::process(Order::ascending, Filter::unique, Case::ignore, data::empty, output) == true);
+		REQUIRE(output.str() == "");
+
+		//output.str("");
+		//REQUIRE(sort::process(Order::ascending, Filter::unique, Case::ignore, data::one_char, output) == true);
+		//REQUIRE(output.str() == " \n");
+
+		//output.str("");
+		//REQUIRE(sort::process(Order::ascending, Filter::unique, Case::ignore, data::one_line, output) == true);
+		//REQUIRE(output.str() == "\n");
+
+		//output.str("");
+		//REQUIRE(sort::process(Order::ascending, Filter::unique, Case::ignore, data::numbered, output) == true);
+		//REQUIRE(output.str() == "1\n2\n3\n4\n5\n9\n");
 	}
 
 	SECTION("descending")
 	{
+		std::ostringstream output{};
+
+		REQUIRE(sort::process(Order::descending, Filter::all, Case::sensitive, data::empty, output) == true);
+		REQUIRE(output.str() == "");
+
+		//output.str("");
+		//REQUIRE(sort::process(Order::descending, Filter::all, Case::sensitive, data::one_char, output) == true);
+		//REQUIRE(output.str() == " \n");
+
+		//output.str("");
+		//REQUIRE(sort::process(Order::descending, Filter::all, Case::sensitive, data::one_line, output) == true);
+		//REQUIRE(output.str() == "\n");
+
+		//output.str("");
+		//REQUIRE(sort::process(Order::descending, Filter::all, Case::sensitive, data::numbered, output) == true);
+		//REQUIRE(output.str() == "1\n2\n3\n4\n5\n9\n");
 	}
 
 	SECTION("descending - unique")
-	{
+	{	std::ostringstream output{};
+
+	REQUIRE(sort::process(Order::descending, Filter::unique, Case::sensitive, data::empty, output) == true);
+	REQUIRE(output.str() == "");
+
+	//output.str("");
+	//REQUIRE(sort::process(Order::descending, Filter::unique, Case::sensitive, data::one_char, output) == true);
+	//REQUIRE(output.str() == " \n");
+
+	//output.str("");
+	//REQUIRE(sort::process(Order::descending, Filter::unique, Case::sensitive, data::one_line, output) == true);
+	//REQUIRE(output.str() == "\n");
+
+	//output.str("");
+	//REQUIRE(sort::process(Order::descending, Filter::unique, Case::sensitive, data::numbered, output) == true);
+	//REQUIRE(output.str() == "1\n2\n3\n4\n5\n9\n");
+	
 	}
 
 	SECTION("descending - unique - ignore case")
 	{
+		std::ostringstream output{};
+
+		REQUIRE(sort::process(Order::descending, Filter::unique, Case::ignore, data::empty, output) == true);
+		REQUIRE(output.str() == "");
+
+		//output.str("");
+		//REQUIRE(sort::process(Order::descending, Filter::unique, Case::ignore, data::one_char, output) == true);
+		//REQUIRE(output.str() == " \n");
+
+		//output.str("");
+		//REQUIRE(sort::process(Order::descending, Filter::unique, Case::ignore, data::one_line, output) == true);
+		//REQUIRE(output.str() == "\n");
+
+		//output.str("");
+		//REQUIRE(sort::process(Order::descending, Filter::unique, Case::ignore, data::numbered, output) == true);
+		//REQUIRE(output.str() == "1\n2\n3\n4\n5\n9\n");
 	}
 }
 

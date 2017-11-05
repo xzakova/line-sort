@@ -2,26 +2,6 @@
 #include <iostream>
 #include <vector>
 
-std::vector<std::string> rozbi_multiple(char *retazec)
-{
-	
-	char pomlcka = '-';
-	
-	std::vector<std::string> parametre;
-	std::string s = std::string(retazec);
-	size_t pozicia = 0;
-	std::string par;
-	
-
-	while ((pozicia = s.find(pomlcka)) != std::string::npos)
-	{
-		par = s.substr(1, 1);
-		parametre.push_back(par);
-		s.erase(0, pozicia + 2);
-	}
-
-	return parametre;
-}
 
 
 std::optional<std::tuple<Order, Filter, Case, char *>> options::parse(int argc, char * argv[])
@@ -31,41 +11,55 @@ std::optional<std::tuple<Order, Filter, Case, char *>> options::parse(int argc, 
 	Case compare{ Case::sensitive };
 	char * input{ nullptr };
 
-
+	//iba pre obyc line sort
 	if (argc == 1)
 		return std::make_tuple(order, filter, compare, input);
-	if (argc == 3)
-		input = argv[2];
+
+	//ocakavame vstup ako ("line-sort","-r","-i")  cize zvlast kazdy parameter podla ktoreho triedime
+	//urobime bez posledneho, to nevieme ci je prepinac alebo subor
+
+	for (int i = 1; i < argc-1; i++)
+	{
+		std::string s = std::string(argv[i]); 
+		s.erase(0, 1);
+
+		if (s == "r")
+			order = { Order::descending };
+		if (s == "u")
+			filter = { Filter::unique };
+		if (s == "i")
+			compare = { Case::ignore };
+
+		else return options::parse(argc, argv); //{}
+
+
+	}
+
+	//tu riesime posledny, ak ma dlzku dva je to prepinac, ak nie je to subor. plus ak je to zly prepinac tak vrati chzbu
+
+	if (strlen(argv[argc - 1]) == 2)
+	{
+		std::string s = std::string(argv[argc-1]);
+		s.erase(0, 1);
+
+		if (s == "r")
+			order = { Order::descending };
+		if (s == "u")
+			filter = { Filter::unique };
+		if (s == "i")
+			compare = { Case::ignore };
+
+		else if (strlen(argv[argc - 1]) != 2)
+		{
+			input = argv[argc-1];
+		}
+		else return options::parse(argc, argv); //{}
+
+	}
 
 	
-	int dlzka = strlen(argv[1]);
-
-	if (dlzka != 2 || dlzka != 4 || dlzka != 6)							//pre pripad ze robime obyc. line sort so suborom
-	{
-		input = argv[1];
-		return std::make_tuple(order, filter, compare, input);
-
-	}
-	else
-	{
-		std::vector<std::string> viacparam;								
-		viacparam = rozbi_multiple(argv[1]);
-
-
-		for (std::string i : viacparam)
-		{
-			if (i == "r")
-				order = { Order::descending };
-			if (i == "u")
-				filter = { Filter::unique };
-			if (i == "i")
-				compare = { Case::ignore };
-
-			else return options::parse(argc, argv); //{}
-				
-		}
-
-	}
+	
+	
 
 	
 
