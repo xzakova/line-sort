@@ -11,8 +11,27 @@
 #include <set>
 #include <utility>
 
+bool LessCaseSensitive(const std::string& a, const std::string& b)
+{
+	const char *ptrA = a.c_str();
+	const char *ptrB = b.c_str();
+	for (ptrA, ptrB; ; ++ptrA, ++ptrB)
+	{
+		if (*ptrA != *ptrB || !*ptrA || !*ptrB)	return *ptrA < *ptrB;
+	}
 
+	return false;
 
+	//	for (size_t c = 0; c < a.size() && c < b.size(); c++) {
+	//		if (std::tolower(a[c]) == std::tolower(b[c]))
+	//			continue;
+	//		if (std::tolower(a[c]) < std::tolower(b[c]))
+	//			return true;
+	//		else
+	//			return false;
+	//	}
+	//	return a.size() < b.size();
+}
 
 namespace
 {
@@ -35,17 +54,7 @@ bool sort::process(Order order, Filter filter, Case compare, std::istream & inpu
 	//-i   , case insensitive porovnavanie, t.j. male aj velke pismena berie rovnocenne
 	if (compare == Case::ignore)
 	{
-		std::sort(lines.begin(), lines.end(), [](const std::string& a, const std::string& b) -> bool {
-			for (size_t c = 0; c < a.size() && c < b.size(); c++) {
-				if (std::tolower(a[c]) == std::tolower(b[c]))
-					continue;
-				if (std::tolower(a[c]) < std::tolower(b[c]))
-					return true;
-				else
-					return false;
-			}
-			return a.size() < b.size();
-		});
+		std::sort(lines.begin(), lines.end(), LessCaseSensitive);
 	}
 
 	//pre pridapd -r reverse/descending
@@ -58,7 +67,6 @@ bool sort::process(Order order, Filter filter, Case compare, std::istream & inpu
 	//pre -u unique sort,  najprv zosortujem a potom vymazem posledne ktore su vlastne rovnake s predtym
 	if (filter == Filter::unique)
 	{
-		std::sort(lines.begin(),lines.end());
 		auto last = std::unique(lines.begin(), lines.end());
 		lines.erase(last, lines.end());
 	}
