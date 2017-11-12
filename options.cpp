@@ -1,12 +1,17 @@
 #include "options.h"
+
+#include <iostream>
+#include <fstream>
+#include <ostream>
 #include <string>
 
 
-std::optional<std::tuple<Order, Filter, Case, char *>> options::parse(int argc, char * argv[])
+std::optional<std::tuple<Order, Filter, Case, FilterSpace, char *>> options::parse(int argc, char * argv[])
 {
 	Order order{ Order::ascending };
 	Filter filter{ Filter::all };
 	Case compare{ Case::sensitive };
+	FilterSpace medzera{FilterSpace::nospace};
 	char * input{ nullptr };
 
 	//parse commandline options
@@ -35,6 +40,12 @@ std::optional<std::tuple<Order, Filter, Case, char *>> options::parse(int argc, 
 				return {};
 			compare = Case::ignore;
 		}
+		else if (arg == "-e")
+		{
+			if (medzera != FilterSpace::nospace)
+				return {};
+			medzera = FilterSpace::space;
+		}
 		else
 		{
 			return {};
@@ -51,5 +62,5 @@ std::optional<std::tuple<Order, Filter, Case, char *>> options::parse(int argc, 
 		return {};
 	}
 
-	return std::make_tuple(order, filter, compare, input);
+	return std::make_tuple(order, filter, compare, medzera, input);
 }
